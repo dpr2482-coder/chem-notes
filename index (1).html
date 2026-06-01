@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChemNotes — Dnyaneshwari Randive</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#07090f;
+  --surface:#0e1120;
+  --surface2:#141829;
+  --border:rgba(255,255,255,.07);
+  --border2:rgba(255,255,255,.12);
+  --text:#eef0f8;
+  --text2:#8b90a8;
+  --text3:#555c7a;
+  --orange:#ff6b2b;
+  --orange2:#ff9a5c;
+  --teal:#00d4aa;
+  --blue:#4d9fff;
+  --purple:#9b6dff;
+  --r:12px;
+  --font:'Syne',sans-serif;
+  --body:'DM Sans',sans-serif;
+  --mono:'DM Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);min-height:100vh;overflow-x:hidden}
+
+/* ── ANIMATED BG ── */
+.bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg-layer::before{content:'';position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,43,.08) 0%,transparent 70%);top:-200px;left:-200px;animation:drift1 18s ease-in-out infinite}
+.bg-layer::after{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,170,.06) 0%,transparent 70%);bottom:-150px;right:-100px;animation:drift2 22s ease-in-out infinite}
+.bg-blob{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(77,159,255,.05) 0%,transparent 70%);top:40%;left:50%;transform:translate(-50%,-50%);animation:drift3 15s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,40px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,-30px)}}
+@keyframes drift3{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-45%,-55%)}}
+
+/* doodle SVG background */
+.doodle-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.18}
+.doodle-bg svg{width:100%;height:100%}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px;position:relative;z-index:2}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);background:rgba(7,9,15,.8);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-logo{font-family:var(--font);font-weight:800;font-size:18px;color:var(--text);display:flex;align-items:center;gap:10px}
+.nav-logo span{color:var(--orange)}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--orange),var(--orange2));border-radius:8px;display:grid;place-items:center;font-size:18px}
+.nav-links{display:flex;align-items:center;gap:8px}
+.nav-link{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .2s;border:none;background:none;font-family:var(--body)}
+.nav-link:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.nav-cta{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff !important;padding:8px 20px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;border:none;font-family:var(--body);transition:all .2s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(255,107,43,.3)}
+
+/* ── HERO ── */
+.hero{padding:80px 0 60px;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,107,43,.1);border:1px solid rgba(255,107,43,.25);border-radius:999px;padding:7px 18px;font-size:12px;font-weight:600;color:var(--orange2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:28px;font-family:var(--mono)}
+.hero-badge i{font-size:14px}
+.hero-title{font-family:var(--font);font-size:clamp(42px,6vw,76px);font-weight:800;line-height:1.05;margin-bottom:20px;letter-spacing:-.02em}
+.hero-title em{font-style:normal;background:linear-gradient(135deg,var(--orange),var(--orange2),#ffcd3c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.dept-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.2);border-radius:var(--r);padding:10px 24px;font-size:13px;font-weight:600;color:var(--teal);margin-bottom:28px;letter-spacing:.02em}
+.dept-pill i{font-size:16px}
+.hero-sub{font-size:16px;color:var(--text2);max-width:560px;margin:0 auto 36px;line-height:1.7;font-weight:300}
+
+/* ── SEARCH ── */
+.search-wrap{max-width:580px;margin:0 auto 32px;position:relative}
+.search-wrap input{width:100%;background:var(--surface);border:2px solid var(--border2);color:var(--text);font-family:var(--body);font-size:15px;padding:16px 56px 16px 52px;border-radius:999px;outline:none;transition:all .25s}
+.search-wrap input:focus{border-color:var(--orange);box-shadow:0 0 0 4px rgba(255,107,43,.12)}
+.search-wrap input::placeholder{color:var(--text3)}
+.search-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--orange2);font-size:20px;pointer-events:none}
+.search-clear{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:18px;cursor:pointer;display:none;background:none;border:none;color:var(--text3)}
+
+/* ── CONTACT BAR ── */
+.contact-bar{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.cpill{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:all .2s;border:1px solid var(--border2);color:var(--text2);background:var(--surface)}
+.cpill:hover{border-color:var(--orange);color:var(--orange2);transform:translateY(-2px)}
+.cpill.linkedin{border-color:rgba(10,102,194,.4);color:#5ba4f5;background:rgba(10,102,194,.08)}
+.cpill.linkedin:hover{background:#0a66c2;color:#fff;border-color:#0a66c2}
+.cpill.whatsapp{border-color:rgba(37,211,102,.3);color:#25d366;background:rgba(37,211,102,.06)}
+.cpill.whatsapp:hover{background:#25d366;color:#fff;border-color:#25d366}
+
+/* ── STATS ── */
+.stats-row{display:flex;align-items:center;justify-content:center;gap:40px;padding:28px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:52px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-family:var(--font);font-size:28px;font-weight:800;color:var(--orange)}
+.stat-label{font-size:12px;color:var(--text3);margin-top:2px;font-weight:500;text-transform:uppercase;letter-spacing:.06em}
+
+/* ── HOW TO USE BANNER ── */
+.howto-banner{background:linear-gradient(135deg,rgba(255,107,43,.1),rgba(0,212,170,.08));border:1px solid rgba(255,107,43,.2);border-radius:16px;padding:20px 28px;margin-bottom:40px;display:flex;align-items:flex-start;gap:16px}
+.howto-banner i{font-size:28px;color:var(--orange);flex-shrink:0;margin-top:2px}
+.howto-banner h3{font-family:var(--font);font-size:15px;font-weight:700;color:var(--orange2);margin-bottom:6px}
+.howto-banner p{font-size:13px;color:var(--text2);line-height:1.6}
+.howto-banner code{background:rgba(255,107,43,.15);color:var(--orange2);padding:2px 8px;border-radius:5px;font-family:var(--mono);font-size:12px}
+
+/* ── FILTERS ── */
+.filters{display:flex;align-items:center;gap:10px;margin-bottom:32px;flex-wrap:wrap}
+.filter-label{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-right:4px}
+.ftab{padding:8px 18px;border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--text2);transition:all .2s;font-family:var(--body)}
+.ftab:hover{border-color:var(--orange);color:var(--orange2)}
+.ftab.active{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;border-color:transparent;box-shadow:0 4px 16px rgba(255,107,43,.3)}
+.year-select{background:var(--surface);border:1px solid var(--border2);color:var(--text2);padding:8px 16px;border-radius:999px;font-size:13px;font-family:var(--body);cursor:pointer;outline:none;margin-left:auto}
+.year-select:focus{border-color:var(--orange)}
+
+/* ── GRID ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-bottom:60px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;transition:all .25s;cursor:pointer;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,107,43,.04),transparent);opacity:0;transition:opacity .25s}
+.card:hover{border-color:rgba(255,107,43,.3);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.4)}
+.card:hover::before{opacity:1}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.card-icon{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:22px;flex-shrink:0}
+.card-icon.qp{background:rgba(255,107,43,.12);color:var(--orange)}
+.card-icon.qb{background:rgba(77,159,255,.12);color:var(--blue)}
+.card-icon.notes{background:rgba(0,212,170,.12);color:var(--teal)}
+.card-icon.lab{background:rgba(155,109,255,.12);color:var(--purple)}
+.card-icon.other{background:rgba(255,205,59,.12);color:#ffcd3c}
+.card-badge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em;font-family:var(--mono)}
+.badge-qp{background:rgba(255,107,43,.12);color:var(--orange)}
+.badge-qb{background:rgba(77,159,255,.12);color:var(--blue)}
+.badge-notes{background:rgba(0,212,170,.12);color:var(--teal)}
+.badge-lab{background:rgba(155,109,255,.12);color:var(--purple)}
+.badge-other{background:rgba(255,205,59,.12);color:#ffcd3c}
+.card-title{font-family:var(--font);font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.3}
+.card-subject{font-size:12px;color:var(--text3);margin-bottom:10px;font-family:var(--mono)}
+.card-meta{display:flex;align-items:center;gap:12px;font-size:11px;color:var(--text3);margin-bottom:16px}
+.card-meta span{display:flex;align-items:center;gap:4px}
+.card-meta i{font-size:13px}
+.card-actions{display:flex;gap:8px}
+.btn-view{flex:1;padding:9px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--text2);transition:all .2s;font-family:var(--body);display:flex;align-items:center;justify-content:center;gap:5px;text-decoration:none}
+.btn-view:hover{border-color:var(--orange);color:var(--orange2)}
+.btn-dl{flex:1;padding:9px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;border:none;transition:all .2s;font-family:var(--body);display:flex;align-items:center;justify-content:center;gap:5px;text-decoration:none}
+.btn-dl:hover{box-shadow:0 4px 16px rgba(255,107,43,.4);transform:translateY(-1px)}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:80px 20px;color:var(--text3)}
+.empty i{font-size:52px;margin-bottom:16px;opacity:.4;display:block}
+.empty p{font-size:15px}
+
+/* ── ADD FILE MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:200;display:none;place-items:center;padding:20px}
+.overlay.open{display:grid}
+.modal{background:var(--surface2);border:1px solid var(--border2);border-radius:20px;width:100%;max-width:560px;padding:32px;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.modal-title{font-family:var(--font);font-size:20px;font-weight:800;color:var(--text)}
+.modal-close{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--border);cursor:pointer;display:grid;place-items:center;font-size:18px;color:var(--text2);transition:all .2s}
+.modal-close:hover{background:rgba(255,107,43,.1);border-color:var(--orange);color:var(--orange)}
+
+/* DRIVE INSTRUCTIONS */
+.drive-steps{background:rgba(255,107,43,.06);border:1px solid rgba(255,107,43,.15);border-radius:12px;padding:18px;margin-bottom:22px}
+.drive-steps h4{font-family:var(--font);font-size:13px;font-weight:700;color:var(--orange2);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.drive-steps ol{padding-left:18px;font-size:12px;color:var(--text2);line-height:2}
+.drive-steps ol li strong{color:var(--text)}
+.drive-steps a{color:var(--orange2);text-decoration:none}
+.drive-steps a:hover{text-decoration:underline}
+
+.field{margin-bottom:18px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;font-family:var(--mono)}
+.field input,.field select,.field textarea{width:100%;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:var(--body);font-size:14px;padding:12px 16px;border-radius:10px;outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--orange)}
+.field input::placeholder,.field textarea::placeholder{color:var(--text3)}
+.field select option{background:var(--surface2)}
+.field textarea{resize:vertical;min-height:80px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn-submit{width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;font-family:var(--font);font-size:15px;font-weight:700;border:none;cursor:pointer;transition:all .2s;margin-top:6px}
+.btn-submit:hover{box-shadow:0 8px 28px rgba(255,107,43,.4);transform:translateY(-1px)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ── ADMIN PANEL ── */
+.admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);z-index:300;display:none;place-items:center;padding:20px}
+.admin-overlay.open{display:grid}
+.admin-modal{background:var(--surface2);border:1px solid var(--border2);border-radius:20px;width:100%;max-width:480px;padding:32px;animation:slideUp .3s ease}
+.admin-modal h2{font-family:var(--font);font-size:22px;font-weight:800;margin-bottom:6px}
+.admin-modal p{font-size:13px;color:var(--text3);margin-bottom:24px}
+.pin-row{display:flex;gap:10px;margin-bottom:20px}
+.pin-box{width:52px;height:60px;background:var(--surface);border:2px solid var(--border2);border-radius:10px;font-family:var(--font);font-size:24px;font-weight:800;color:var(--text);text-align:center;outline:none;transition:border-color .2s}
+.pin-box:focus{border-color:var(--orange)}
+.pin-error{font-size:12px;color:#ff5555;margin-bottom:12px;display:none}
+.btn-pin{width:100%;padding:13px;border-radius:10px;background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;font-family:var(--font);font-size:15px;font-weight:700;border:none;cursor:pointer}
+.btn-cancel{width:100%;padding:11px;border-radius:10px;background:transparent;color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:var(--body);font-size:13px;margin-top:8px}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:14px 24px;font-size:14px;font-weight:500;z-index:400;transition:transform .35s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:10px;min-width:260px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:rgba(0,212,170,.3);color:var(--teal)}
+.toast.error{border-color:rgba(255,85,85,.3);color:#ff5555}
+.toast.info{border-color:rgba(255,107,43,.3);color:var(--orange2)}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:40px 0;text-align:center}
+.footer-inner{display:flex;flex-direction:column;align-items:center;gap:16px}
+.footer-logo{font-family:var(--font);font-size:20px;font-weight:800;color:var(--text)}
+.footer-logo span{color:var(--orange)}
+.footer-links{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.footer-link{font-size:13px;color:var(--text3);text-decoration:none;transition:color .2s}
+.footer-link:hover{color:var(--orange2)}
+footer p{font-size:12px;color:var(--text3)}
+
+/* ── SECTION HEADING ── */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+.section-head h2{font-family:var(--font);font-size:22px;font-weight:800;color:var(--text)}
+.count-badge{font-family:var(--mono);font-size:12px;padding:4px 12px;border-radius:999px;background:rgba(255,107,43,.1);color:var(--orange2);border:1px solid rgba(255,107,43,.2)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeUp .5s ease both}
+
+@media(max-width:640px){
+  .nav-links{display:none}
+  .row2{grid-template-columns:1fr}
+  .stats-row{gap:24px}
+  .hero-title{font-size:36px}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- Animated background -->
+<div class="bg-layer"></div>
+<div class="bg-blob"></div>
+
+<!-- Doodle background -->
+<div class="doodle-bg">
+<svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .dk{fill:none;stroke-linecap:round;stroke-linejoin:round}
+      @keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+      @keyframes fltx{0%,100%{transform:translateX(0)}50%{transform:translateX(12px)}}
+      .f1{animation:flt 7s ease-in-out infinite}
+      .f2{animation:flt 9s ease-in-out infinite 2s}
+      .f3{animation:fltx 6s ease-in-out infinite 1s}
+      .f4{animation:flt 11s ease-in-out infinite 3s}
+    </style>
+  </defs>
+  <!-- Benzene -->
+  <g class="f1" opacity=".6">
+    <polygon points="110,90 148,112 148,156 110,178 72,156 72,112" class="dk" stroke="#ff6b2b" stroke-width="2.2"/>
+    <line x1="110" y1="90" x2="110" y2="70" stroke="#ff6b2b" stroke-width="1.8" opacity=".5"/>
+    <line x1="148" y1="112" x2="166" y2="102" stroke="#ff6b2b" stroke-width="1.8" opacity=".5"/>
+    <line x1="148" y1="156" x2="166" y2="166" stroke="#ff6b2b" stroke-width="1.8" opacity=".5"/>
+    <line x1="110" y1="178" x2="110" y2="198" stroke="#ff6b2b" stroke-width="1.8" opacity=".5"/>
+    <line x1="72" y1="156" x2="54" y2="166" stroke="#ff6b2b" stroke-width="1.8" opacity=".5"/>
+    <line x1="72" y1="112" x2="54" y2="102" stroke="#ff6b2b" stroke-width="1.8" opacity=".5"/>
+    <polygon points="110,104 136,119 136,149 110,164 84,149 84,119" class="dk" stroke="#ff9a5c" stroke-width="1" opacity=".4"/>
+  </g>
+  <!-- Flask -->
+  <g class="f2" opacity=".65">
+    <path d="M1260,50 L1260,90 L1220,160 L1330,160 L1290,90 L1290,50 Z" class="dk" stroke="#4d9fff" stroke-width="2.2"/>
+    <line x1="1252" y1="50" x2="1298" y2="50" stroke="#4d9fff" stroke-width="3"/>
+    <circle cx="1238" cy="148" r="5" fill="#4d9fff" opacity=".3"/>
+    <circle cx="1295" cy="140" r="4" fill="#4d9fff" opacity=".25"/>
+    <path d="M1265,40 Q1262,28 1268,16" class="dk" stroke="#4d9fff" stroke-width="1.5" opacity=".4"/>
+    <path d="M1278,38 Q1275,26 1281,14" class="dk" stroke="#4d9fff" stroke-width="1.5" opacity=".4"/>
+    <text x="1238" y="118" font-family="monospace" font-size="11" fill="#4d9fff" opacity=".6">H₂O</text>
+  </g>
+  <!-- Molecule -->
+  <g class="f3" opacity=".6">
+    <circle cx="660" cy="55" r="13" fill="#00d4aa" opacity=".15" stroke="#00d4aa" stroke-width="1.8"/>
+    <line x1="673" y1="55" x2="700" y2="55" stroke="#00d4aa" stroke-width="2"/>
+    <circle cx="714" cy="55" r="13" fill="#00d4aa" opacity=".15" stroke="#00d4aa" stroke-width="1.8"/>
+    <line x1="727" y1="55" x2="754" y2="55" stroke="#00d4aa" stroke-width="2"/>
+    <circle cx="768" cy="55" r="13" fill="#00d4aa" opacity=".15" stroke="#00d4aa" stroke-width="1.8"/>
+    <text x="654" y="59" font-family="monospace" font-size="10" fill="#00d4aa" opacity=".9" text-anchor="middle">C</text>
+    <text x="714" y="59" font-family="monospace" font-size="10" fill="#00d4aa" opacity=".9" text-anchor="middle">H</text>
+    <text x="768" y="59" font-family="monospace" font-size="10" fill="#00d4aa" opacity=".9" text-anchor="middle">O</text>
+  </g>
+  <!-- Periodic tiles -->
+  <g class="f4" opacity=".55">
+    <rect x="1310" y="180" width="38" height="38" rx="4" class="dk" stroke="#00d4aa" stroke-width="1.6"/>
+    <text x="1324" y="197" font-family="monospace" font-size="8" fill="#00d4aa" opacity=".7">6</text>
+    <text x="1318" y="211" font-family="monospace" font-size="13" font-weight="bold" fill="#00d4aa" opacity=".9">C</text>
+    <rect x="1352" y="180" width="38" height="38" rx="4" class="dk" stroke="#4d9fff" stroke-width="1.6"/>
+    <text x="1365" y="197" font-family="monospace" font-size="8" fill="#4d9fff" opacity=".7">7</text>
+    <text x="1360" y="211" font-family="monospace" font-size="13" font-weight="bold" fill="#4d9fff" opacity=".9">N</text>
+    <rect x="1310" y="222" width="38" height="38" rx="4" class="dk" stroke="#9b6dff" stroke-width="1.6"/>
+    <text x="1323" y="239" font-family="monospace" font-size="8" fill="#9b6dff" opacity=".7">8</text>
+    <text x="1318" y="253" font-family="monospace" font-size="13" font-weight="bold" fill="#9b6dff" opacity=".9">O</text>
+    <rect x="1352" y="222" width="38" height="38" rx="4" class="dk" stroke="#ff9a5c" stroke-width="1.6"/>
+    <text x="1365" y="239" font-family="monospace" font-size="8" fill="#ff9a5c" opacity=".7">1</text>
+    <text x="1360" y="253" font-family="monospace" font-size="13" font-weight="bold" fill="#ff9a5c" opacity=".9">H</text>
+  </g>
+  <!-- Formulas -->
+  <text x="380" y="52" font-family="monospace" font-size="16" fill="#ff6b2b" opacity=".35">CH₄ + 2O₂ → CO₂ + 2H₂O</text>
+  <text x="880" y="840" font-family="monospace" font-size="14" fill="#4d9fff" opacity=".3">ΔG = ΔH − TΔS</text>
+  <text x="42" y="420" font-family="monospace" font-size="13" fill="#00d4aa" opacity=".3" transform="rotate(-90,42,420)">PV = nRT</text>
+  <text x="600" y="885" font-family="monospace" font-size="13" fill="#ff9a5c" opacity=".28">NaOH + HCl → NaCl + H₂O</text>
+  <!-- Sine wave -->
+  <path d="M0,370 Q100,330 200,370 Q300,410 400,370 Q500,330 600,370 Q700,410 800,370 Q900,330 1000,370 Q1100,410 1200,370 Q1300,330 1440,370" class="dk" stroke="#4d9fff" stroke-width="1.2" opacity=".08" stroke-dasharray="8,4"/>
+  <!-- Atomic orbitals -->
+  <g opacity=".45">
+    <circle cx="200" cy="700" r="7" fill="#ff6b2b" opacity=".5"/>
+    <ellipse cx="200" cy="700" rx="50" ry="20" class="dk" stroke="#ff9a5c" stroke-width="1.5" transform="rotate(0,200,700)"/>
+    <ellipse cx="200" cy="700" rx="50" ry="20" class="dk" stroke="#ff6b2b" stroke-width="1.5" transform="rotate(60,200,700)"/>
+    <ellipse cx="200" cy="700" rx="50" ry="20" class="dk" stroke="#ffcd3c" stroke-width="1.5" transform="rotate(120,200,700)"/>
+  </g>
+  <!-- Beaker -->
+  <g opacity=".5">
+    <path d="M50,650 L50,760 Q50,778 68,778 L158,778 Q176,778 176,760 L176,650 Z" class="dk" stroke="#9b6dff" stroke-width="2"/>
+    <line x1="42" y1="650" x2="184" y2="650" stroke="#9b6dff" stroke-width="2.5"/>
+    <line x1="52" y1="720" x2="174" y2="720" stroke="#9b6dff" stroke-width="1.2" opacity=".4" stroke-dasharray="5,3"/>
+    <circle cx="90" cy="755" r="4" fill="#9b6dff" opacity=".2"/>
+    <circle cx="130" cy="745" r="5" fill="#9b6dff" opacity=".2"/>
+  </g>
+</svg>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="wrap nav-inner">
+    <div class="nav-logo">
+      <div class="logo-icon">⚗️</div>
+      Chem<span>Notes</span>
+    </div>
+    <div class="nav-links">
+      <button class="nav-link" onclick="scrollToNotes()">📚 Notes</button>
+      <a href="https://www.linkedin.com/in/dnyaneshwari-randive-95b97b37b" target="_blank" class="nav-link">LinkedIn</a>
+      <a href="tel:+919665452482" class="nav-link">📞 Contact</a>
+      <button class="nav-cta" onclick="openAdmin()">+ Add Resource</button>
+    </div>
+    <button class="nav-cta" style="display:none" id="mobAdd" onclick="openAdmin()">+ Add</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="wrap">
+  <section class="hero fade-in">
+    <div class="hero-badge"><i class="ti ti-flask"></i>Chemical Engineering · DY Patil International University</div>
+    <h1 class="hero-title">Notes by<br><em>Dnyaneshwari Randive</em></h1>
+    <div class="dept-pill"><i class="ti ti-atom"></i>Department of Chemical Engineering — DY Patil International University, Pune</div>
+
+    <!-- SEARCH -->
+    <div class="search-wrap">
+      <i class="ti ti-search search-icon"></i>
+      <input type="text" id="searchInput" placeholder="Search notes, subjects, question papers…" oninput="render();toggleClear()">
+      <button class="search-clear" id="clearBtn" onclick="clearSearch()"><i class="ti ti-x"></i></button>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="contact-bar">
+      <a href="https://www.linkedin.com/in/dnyaneshwari-randive-95b97b37b" target="_blank" rel="noopener" class="cpill linkedin">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        Connect on LinkedIn
+      </a>
+      <a href="tel:+919665452482" class="cpill">
+        <i class="ti ti-phone" style="color:var(--teal)"></i>+91 96654 52482
+      </a>
+      <a href="https://wa.me/919665452482" target="_blank" rel="noopener" class="cpill whatsapp">
+        <i class="ti ti-brand-whatsapp"></i>WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total Resources</div></div>
+    <div class="stat"><div class="stat-num" id="statQP" style="color:var(--orange)">0</div><div class="stat-label">Question Papers</div></div>
+    <div class="stat"><div class="stat-num" id="statNotes" style="color:var(--teal)">0</div><div class="stat-label">Notes</div></div>
+    <div class="stat"><div class="stat-num" id="statLab" style="color:var(--purple)">0</div><div class="stat-label">Lab Manuals</div></div>
+    <div class="stat"><div class="stat-num" id="statFree" style="color:#ffcd3c">∞</div><div class="stat-label">Always Free</div></div>
+  </div>
+
+  <!-- HOW TO USE -->
+  <div class="howto-banner" id="notes">
+    <i class="ti ti-brand-google-drive"></i>
+    <div>
+      <h3>📌 How to use this portal</h3>
+      <p>All files are hosted on <strong>Google Drive</strong> — free, unlimited storage. To add a resource: click <strong>"+ Add Resource"</strong>, upload your file to Google Drive, set sharing to <code>Anyone with the link</code>, paste the link here. Students can view or download instantly — <strong>no login required!</strong></p>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters">
+    <span class="filter-label">Filter:</span>
+    <button class="ftab active" onclick="setFilter('All',this)">All</button>
+    <button class="ftab" onclick="setFilter('Question Paper',this)">📄 Question Papers</button>
+    <button class="ftab" onclick="setFilter('Question Bank',this)">📝 Question Banks</button>
+    <button class="ftab" onclick="setFilter('Notes',this)">📒 Notes</button>
+    <button class="ftab" onclick="setFilter('Lab Manual',this)">🧪 Lab Manuals</button>
+    <button class="ftab" onclick="setFilter('Other',this)">📦 Other</button>
+    <select class="year-select" id="yearSelect" onchange="render()">
+      <option value="All">All Years</option>
+      <option value="FY">FY (1st Year)</option>
+      <option value="SY">SY (2nd Year)</option>
+      <option value="TY">TY (3rd Year)</option>
+      <option value="LY">LY (4th Year)</option>
+    </select>
+  </div>
+
+  <!-- GRID -->
+  <div class="section-head">
+    <h2>📚 Study Resources</h2>
+    <span class="count-badge" id="countBadge">0 files</span>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap footer-inner">
+    <div class="footer-logo">Chem<span>Notes</span></div>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/dnyaneshwari-randive-95b97b37b" target="_blank" class="footer-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+      <a href="tel:+919665452482" class="footer-link">📞 +91 96654 52482</a>
+      <a href="https://wa.me/919665452482" target="_blank" class="footer-link">💬 WhatsApp</a>
+    </div>
+    <p>Made with ♥ by <strong>Dnyaneshwari Randive</strong> · Chemical Engineering · DY Patil International University</p>
+    <p style="margin-top:4px">Sharing knowledge, one file at a time · Unlimited files via Google Drive 🚀</p>
+  </div>
+</footer>
+
+<!-- ADD RESOURCE MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">➕ Add New Resource</div>
+      <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    </div>
+
+    <div class="drive-steps">
+      <h4><i class="ti ti-brand-google-drive"></i> Step 1 — Upload to Google Drive first</h4>
+      <ol>
+        <li>Go to <a href="https://drive.google.com" target="_blank"><strong>drive.google.com</strong></a> → Upload your file</li>
+        <li>Right-click the file → <strong>"Share"</strong></li>
+        <li>Click <strong>"Change to anyone with the link"</strong> → Copy link</li>
+        <li>Paste that link below ↓</li>
+      </ol>
+    </div>
+
+    <div class="field">
+      <label>📎 Google Drive Link *</label>
+      <input type="url" id="f-link" placeholder="https://drive.google.com/file/d/…">
+    </div>
+    <div class="field">
+      <label>📌 Title *</label>
+      <input type="text" id="f-title" placeholder="e.g. Unit 3 — Mass Transfer Notes">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>📚 Category *</label>
+        <select id="f-cat">
+          <option value="">Select…</option>
+          <option>Question Paper</option>
+          <option>Question Bank</option>
+          <option>Notes</option>
+          <option>Lab Manual</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>🎓 Year *</label>
+        <select id="f-year">
+          <option value="">Select…</option>
+          <option value="FY">FY — 1st Year</option>
+          <option value="SY">SY — 2nd Year</option>
+          <option value="TY">TY — 3rd Year</option>
+          <option value="LY">LY — 4th Year</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>🔬 Subject</label>
+      <input type="text" id="f-subject" placeholder="e.g. Fluid Mechanics, Heat Transfer…">
+    </div>
+    <div class="field">
+      <label>📝 Description (optional)</label>
+      <textarea id="f-desc" placeholder="Brief description of the content…"></textarea>
+    </div>
+    <button class="btn-submit" onclick="addResource()" id="submitBtn">✅ Add Resource</button>
+  </div>
+</div>
+
+<!-- ADMIN PIN MODAL -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-modal">
+    <h2>🔐 Admin Access</h2>
+    <p>Enter your 4-digit PIN to add or manage resources.</p>
+    <div class="pin-row" id="pinRow">
+      <input class="pin-box" type="password" maxlength="1" inputmode="numeric" oninput="pinNext(this,0)">
+      <input class="pin-box" type="password" maxlength="1" inputmode="numeric" oninput="pinNext(this,1)">
+      <input class="pin-box" type="password" maxlength="1" inputmode="numeric" oninput="pinNext(this,2)">
+      <input class="pin-box" type="password" maxlength="1" inputmode="numeric" oninput="pinNext(this,3)">
+    </div>
+    <div class="pin-error" id="pinError">❌ Wrong PIN. Try again.</div>
+    <button class="btn-pin" onclick="checkPin()">Unlock</button>
+    <button class="btn-cancel" onclick="closeAdmin()">Cancel</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><i class="ti ti-check"></i><span id="toastMsg"></span></div>
+
+<script>
+// ── DATA STORE (localStorage — unlimited entries) ──
+const STORE = 'chemNotes_v3';
+let data = JSON.parse(localStorage.getItem(STORE) || '[]');
+let activeFilter = 'All';
+const ADMIN_PIN = '1234'; // ← CHANGE THIS TO YOUR SECRET PIN
+let adminUnlocked = false;
+
+function save(){ localStorage.setItem(STORE, JSON.stringify(data)); }
+
+// ── CONVERT DRIVE LINK TO DIRECT VIEW/DOWNLOAD ──
+function driveViewLink(url){
+  // handle /file/d/ID/view and /open?id=ID formats
+  let id = '';
+  const m1 = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  const m2 = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if(m1) id = m1[1];
+  else if(m2) id = m2[1];
+  if(id){
+    return {
+      view: `https://drive.google.com/file/d/${id}/preview`,
+      download: `https://drive.google.com/uc?export=download&id=${id}`,
+      open: `https://drive.google.com/file/d/${id}/view`
+    };
+  }
+  return { view: url, download: url, open: url };
+}
+
+// ── RENDER ──
+function render(){
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const yr = document.getElementById('yearSelect').value;
+  let items = data.filter(d => {
+    const matchCat = activeFilter === 'All' || d.cat === activeFilter;
+    const matchYr = yr === 'All' || d.year === yr;
+    const matchQ = !q || d.title.toLowerCase().includes(q) || (d.subject||'').toLowerCase().includes(q) || d.cat.toLowerCase().includes(q) || (d.desc||'').toLowerCase().includes(q);
+    return matchCat && matchYr && matchQ;
+  });
+
+  document.getElementById('countBadge').textContent = items.length + ' file' + (items.length!==1?'s':'');
+
+  const grid = document.getElementById('grid');
+  if(!items.length){
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><i class="ti ti-files-off"></i><p>${data.length?'No results found. Try a different search or filter.':'No resources yet. Click "+ Add Resource" to get started!'}</p></div>`;
+    return;
+  }
+
+  const iconMap = {'Question Paper':'qp','Question Bank':'qb','Notes':'notes','Lab Manual':'lab','Other':'other'};
+  const emojiMap = {'Question Paper':'📄','Question Bank':'📝','Notes':'📒','Lab Manual':'🧪','Other':'📦'};
+
+  grid.innerHTML = items.map((d,i) => {
+    const cls = iconMap[d.cat]||'other';
+    const em = emojiMap[d.cat]||'📦';
+    const links = driveViewLink(d.link);
+    const dateStr = new Date(d.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    return `<div class="card fade-in" style="animation-delay:${i*0.04}s">
+      <div class="card-top">
+        <div class="card-icon ${cls}">${em}</div>
+        <span class="card-badge badge-${cls}">${d.cat}</span>
+      </div>
+      <div class="card-title">${d.title}</div>
+      ${d.subject?`<div class="card-subject">🔬 ${d.subject}</div>`:''}
+      <div class="card-meta">
+        <span><i class="ti ti-calendar"></i>${dateStr}</span>
+        ${d.year?`<span><i class="ti ti-school"></i>${d.year}</span>`:''}
+      </div>
+      ${d.desc?`<div style="font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.5">${d.desc}</div>`:''}
+      <div class="card-actions">
+        <a href="${links.open}" target="_blank" class="btn-view"><i class="ti ti-eye"></i>View</a>
+        <a href="${links.download}" target="_blank" class="btn-dl"><i class="ti ti-download"></i>Download</a>
+        ${adminUnlocked?`<button onclick="deleteItem(${d.id})" style="padding:9px 12px;border-radius:8px;background:rgba(255,85,85,.1);border:1px solid rgba(255,85,85,.2);color:#ff5555;cursor:pointer;font-size:12px;transition:all .2s" onmouseover="this.style.background='rgba(255,85,85,.2)'" onmouseout="this.style.background='rgba(255,85,85,.1)'"><i class="ti ti-trash"></i></button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  updateStats();
+}
+
+function updateStats(){
+  document.getElementById('statTotal').textContent = data.length;
+  document.getElementById('statQP').textContent = data.filter(d=>d.cat==='Question Paper').length;
+  document.getElementById('statNotes').textContent = data.filter(d=>d.cat==='Notes').length;
+  document.getElementById('statLab').textContent = data.filter(d=>d.cat==='Lab Manual').length;
+}
+
+function setFilter(f, el){
+  activeFilter = f;
+  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function scrollToNotes(){ document.getElementById('notes').scrollIntoView({behavior:'smooth'}); }
+function toggleClear(){ document.getElementById('clearBtn').style.display = document.getElementById('searchInput').value ? 'block' : 'none'; }
+function clearSearch(){ document.getElementById('searchInput').value=''; document.getElementById('clearBtn').style.display='none'; render(); }
+
+// ── ADMIN ──
+function openAdmin(){ document.getElementById('adminOverlay').classList.add('open'); setTimeout(()=>document.querySelector('.pin-box').focus(),100); }
+function closeAdmin(){ document.getElementById('adminOverlay').classList.remove('open'); document.querySelectorAll('.pin-box').forEach(b=>b.value=''); document.getElementById('pinError').style.display='none'; }
+
+function pinNext(el, idx){
+  if(el.value.length===1 && idx<3){
+    document.querySelectorAll('.pin-box')[idx+1].focus();
+  }
+  if(idx===3 && el.value.length===1) checkPin();
+}
+
+function checkPin(){
+  const pin = Array.from(document.querySelectorAll('.pin-box')).map(b=>b.value).join('');
+  if(pin === ADMIN_PIN){
+    adminUnlocked = true;
+    closeAdmin();
+    document.getElementById('overlay').classList.add('open');
+    render();
+  } else {
+    document.getElementById('pinError').style.display='block';
+    document.querySelectorAll('.pin-box').forEach(b=>{b.value='';b.style.borderColor='#ff5555'});
+    setTimeout(()=>document.querySelectorAll('.pin-box').forEach(b=>b.style.borderColor=''),1000);
+    document.querySelectorAll('.pin-box')[0].focus();
+  }
+}
+
+// ── MODAL ──
+function closeModal(){ document.getElementById('overlay').classList.remove('open'); clearForm(); }
+function clearForm(){
+  ['f-link','f-title','f-subject','f-desc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-cat').value='';
+  document.getElementById('f-year').value='';
+}
+
+function addResource(){
+  const link = document.getElementById('f-link').value.trim();
+  const title = document.getElementById('f-title').value.trim();
+  const cat = document.getElementById('f-cat').value;
+  const year = document.getElementById('f-year').value;
+  const subject = document.getElementById('f-subject').value.trim();
+  const desc = document.getElementById('f-desc').value.trim();
+
+  if(!link){ showToast('Please paste your Google Drive link!','error'); return; }
+  if(!link.includes('drive.google.com')){ showToast('Please use a valid Google Drive link','error'); return; }
+  if(!title){ showToast('Please enter a title!','error'); return; }
+  if(!cat){ showToast('Please select a category!','error'); return; }
+  if(!year){ showToast('Please select a year!','error'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Adding…';
+
+  setTimeout(()=>{
+    data.unshift({ id: Date.now(), link, title, cat, year, subject, desc, date: Date.now() });
+    save();
+    render();
+    closeModal();
+    btn.disabled = false;
+    btn.textContent = '✅ Add Resource';
+    showToast('Resource added successfully! 🎉','success');
+  }, 400);
+}
+
+function deleteItem(id){
+  if(!confirm('Delete this resource?')) return;
+  data = data.filter(d=>d.id!==id);
+  save();
+  render();
+  showToast('Resource deleted','info');
+}
+
+// ── TOAST ──
+function showToast(msg, type='success'){
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+// ── MOBILE NAV ──
+if(window.innerWidth < 640) document.getElementById('mobAdd').style.display='block';
+
+// ── INIT ──
+render();
+</script>
+</body>
+</html>

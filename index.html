@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notes by Dnyaneshwari | DY Patil International University</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+/* ── RESET & BASE ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0c10;
+  --bg2:#0f1117;
+  --bg3:#161a24;
+  --surface:#1a1f2e;
+  --surface2:#222840;
+  --border:#ffffff12;
+  --border2:#ffffff22;
+  --accent:#e8630a;
+  --accent2:#f59340;
+  --accent3:#fbbf6a;
+  --text:#f0ede8;
+  --text2:#a8a4a0;
+  --text3:#666370;
+  --teal:#0f9e8a;
+  --blue:#3b82f6;
+  --green:#22c55e;
+  --red:#ef4444;
+  --font-display:'Cormorant Garamond',serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --r:12px;
+  --r2:18px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:15px;line-height:1.6;overflow-x:hidden;min-height:100vh}
+
+/* ── CANVAS BACKGROUND ── */
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.3}
+
+/* ── DOODLE SVG BACKGROUND ── */
+#doodleBg{position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%;overflow:hidden}
+#doodleBg svg{width:100%;height:100%;position:absolute;inset:0}
+
+/* ── DECORATIVE LINES ── */
+.deco-line{position:fixed;background:linear-gradient(180deg,transparent,var(--accent),transparent);width:1px;opacity:.15;pointer-events:none;z-index:0}
+.deco-line.l1{left:8%;top:0;height:100vh;animation:linePulse 4s ease-in-out infinite}
+.deco-line.l2{left:92%;top:0;height:100vh;animation:linePulse 4s ease-in-out infinite .8s}
+.deco-line.l3{right:20%;top:0;height:100vh;opacity:.07;animation:linePulse 6s ease-in-out infinite 1.5s}
+@keyframes linePulse{0%,100%{opacity:.08}50%{opacity:.22}}
+
+/* ── LAYOUT ── */
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 2rem}
+
+/* ── NAVBAR ── */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,12,16,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.9rem 2rem}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.nav-logo{display:flex;flex-direction:column;line-height:1.15}
+.nav-logo-main{font-family:var(--font-display);font-size:1.35rem;font-weight:700;color:var(--text);letter-spacing:.01em}
+.nav-logo-main span{color:var(--accent)}
+.nav-logo-sub{font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;font-weight:500}
+.nav-right{display:flex;align-items:center;gap:.75rem}
+.badge-admin{display:none;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--accent2);background:rgba(232,99,10,.12);border:1px solid rgba(232,99,10,.3);padding:4px 12px;border-radius:999px;letter-spacing:.04em}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font-body);border:1px solid var(--border2);background:transparent;color:var(--text2);transition:all .2s}
+.btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(232,99,10,.07)}
+.btn-accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-accent:hover{background:#c9550a;border-color:#c9550a;color:#fff}
+.btn-upload{display:none}
+
+/* ── HERO ── */
+.hero{padding:5rem 0 4rem;text-align:center;position:relative}
+.hero-kicker{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);background:rgba(232,99,10,.1);border:1px solid rgba(232,99,10,.25);padding:6px 16px;border-radius:999px;margin-bottom:1.8rem;animation:fadeDown .6s ease both}
+.hero-kicker i{font-size:14px}
+.hero-title{font-family:var(--font-display);font-size:clamp(2.6rem,6vw,4.8rem);font-weight:700;line-height:1.05;letter-spacing:-.02em;margin-bottom:.6rem;animation:fadeDown .6s ease .1s both}
+.hero-title em{color:var(--accent);font-style:italic}
+.hero-sub{font-size:1rem;color:var(--text2);max-width:520px;margin:0 auto 1rem;animation:fadeDown .6s ease .2s both;font-weight:300;line-height:1.7}
+.hero-uni{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text3);font-weight:500;letter-spacing:.04em;margin-bottom:2.5rem;animation:fadeDown .6s ease .25s both}
+.hero-uni i{font-size:15px;color:var(--teal)}
+.hero-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;animation:fadeDown .6s ease .3s both}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:6px 14px;border-radius:999px;border:1px solid var(--border2);color:var(--text2);background:var(--surface);transition:all .2s;cursor:default}
+.chip i{font-size:13px;color:var(--accent2)}
+.chip:hover{border-color:var(--accent2);color:var(--text)}
+
+/* ── STATS ── */
+.stats-section{padding:0 0 3rem}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:1.4rem 1.2rem;text-align:center;position:relative;overflow:hidden;transition:border-color .2s,transform .2s;animation:fadeUp .5s ease both}
+.stat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(232,99,10,.05) 0%,transparent 60%);pointer-events:none}
+.stat-card:hover{border-color:rgba(232,99,10,.35);transform:translateY(-2px)}
+.stat-num{font-family:var(--font-display);font-size:2.8rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:4px}
+.stat-label{font-size:12px;color:var(--text3);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.stat-icon{font-size:20px;color:var(--accent2);margin-bottom:.5rem}
+
+/* ── SECTION HEADER ── */
+.section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.section-title{font-family:var(--font-display);font-size:1.6rem;font-weight:700;color:var(--text)}
+.section-count{font-size:12px;color:var(--text3);background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:999px;font-family:var(--font-mono)}
+
+/* ── FILTERS ── */
+.filters-bar{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;margin-bottom:2rem;padding:1.2rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2)}
+.filter-search{flex:1;min-width:200px;position:relative}
+.filter-search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px;pointer-events:none}
+.filter-search input{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:var(--font-body);font-size:14px;padding:10px 14px 10px 38px;border-radius:var(--r);outline:none;transition:border-color .2s}
+.filter-search input::placeholder{color:var(--text3)}
+.filter-search input:focus{border-color:var(--accent)}
+.filter-select select{appearance:none;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:var(--font-body);font-size:13px;padding:10px 32px 10px 12px;border-radius:var(--r);cursor:pointer;outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666370' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .2s}
+.filter-select select:focus{border-color:var(--accent);outline:none}
+
+/* ── FILE GRID ── */
+.files-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.1rem;margin-bottom:4rem}
+.file-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:1.3rem;display:flex;flex-direction:column;gap:.9rem;position:relative;overflow:hidden;transition:border-color .22s,transform .22s;animation:fadeUp .4s ease both}
+.file-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));opacity:0;transition:opacity .22s}
+.file-card:hover{border-color:rgba(232,99,10,.4);transform:translateY(-3px)}
+.file-card:hover::after{opacity:1}
+.file-card-top{display:flex;align-items:flex-start;gap:.8rem}
+.file-icon-wrap{width:46px;height:46px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.file-icon-wrap.pdf{background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.2)}
+.file-icon-wrap.ppt{background:rgba(245,158,11,.12);color:#f59e0b;border:1px solid rgba(245,158,11,.2)}
+.file-icon-wrap.doc{background:rgba(59,130,246,.12);color:#3b82f6;border:1px solid rgba(59,130,246,.2)}
+.file-icon-wrap.other{background:rgba(168,85,247,.12);color:#a855f7;border:1px solid rgba(168,85,247,.2)}
+.file-info{flex:1;min-width:0}
+.file-name{font-weight:600;font-size:14px;color:var(--text);line-height:1.35;word-break:break-word}
+.file-subject{font-size:12px;color:var(--text3);margin-top:2px}
+.file-tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{display:inline-block;font-size:10px;font-weight:600;padding:3px 8px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase}
+.tag-qp{background:rgba(232,99,10,.15);color:var(--accent2);border:1px solid rgba(232,99,10,.25)}
+.tag-qb{background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.25)}
+.tag-notes{background:rgba(168,85,247,.12);color:#c084fc;border:1px solid rgba(168,85,247,.25)}
+.tag-lab{background:rgba(15,158,138,.12);color:#2dd4bf;border:1px solid rgba(15,158,138,.25)}
+.tag-ref{background:rgba(59,130,246,.12);color:#60a5fa;border:1px solid rgba(59,130,246,.25)}
+.tag-other{background:rgba(255,255,255,.06);color:var(--text3);border:1px solid var(--border)}
+.file-meta{font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-top:auto}
+.file-actions{display:flex;gap:7px;padding-top:.9rem;border-top:1px solid var(--border)}
+.dl-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;background:rgba(232,99,10,.12);color:var(--accent2);border:1px solid rgba(232,99,10,.25);font-family:var(--font-body);letter-spacing:.02em;transition:all .18s}
+.dl-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.del-btn{display:flex;align-items:center;justify-content:center;padding:9px 12px;border-radius:var(--r);cursor:pointer;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#ef4444;font-size:15px;transition:all .18s}
+.del-btn:hover{background:rgba(239,68,68,.2)}
+.empty-state{grid-column:1/-1;text-align:center;padding:5rem 2rem;color:var(--text3)}
+.empty-state i{font-size:3rem;display:block;margin-bottom:1rem;color:var(--text3)}
+.empty-state p{font-size:15px;max-width:320px;margin:0 auto;line-height:1.6}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:2rem 0;text-align:center;color:var(--text3);font-size:12px}
+footer strong{color:var(--accent2)}
+.btn-linkedin{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-body);border:1px solid #0a66c2;background:rgba(10,102,194,.12);color:#5ba4f5;transition:all .2s;text-decoration:none}
+.btn-linkedin:hover{background:#0a66c2;color:#fff;border-color:#0a66c2}
+.contact-bar{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:1.2rem;animation:fadeDown .6s ease .35s both}
+.contact-pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:8px 18px;border-radius:999px;border:1px solid var(--border2);color:var(--text2);background:var(--surface);text-decoration:none;transition:all .2s;font-weight:500}
+.contact-pill:hover{border-color:var(--teal);color:#2dd4bf}
+.contact-pill.linkedin{border-color:#0a66c2;color:#5ba4f5;background:rgba(10,102,194,.1)}
+.contact-pill.linkedin:hover{background:#0a66c2;color:#fff}
+.dept-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(232,99,10,.18),rgba(245,147,64,.1));border:1px solid rgba(232,99,10,.4);border-radius:var(--r);padding:10px 22px;font-size:14px;font-weight:600;color:var(--accent2);letter-spacing:.04em;margin-bottom:1rem;animation:fadeDown .6s ease .15s both}
+.dept-badge i{font-size:18px;color:var(--accent)}
+#heroSearch:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,99,10,.15)}
+
+/* ── MODALS ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:2rem;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;gap:1.2rem;animation:modalIn .25s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
+.modal-hd{display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--text)}
+.modal-close{background:none;border:1px solid var(--border);color:var(--text3);width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .15s}
+.modal-close:hover{border-color:var(--accent);color:var(--accent)}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase}
+.field input,.field select,.field textarea{background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--font-body);font-size:14px;padding:11px 14px;border-radius:var(--r);outline:none;transition:border-color .2s;width:100%}
+.field input::placeholder,.field textarea::placeholder{color:var(--text3)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+.field select option{background:var(--bg2)}
+.field textarea{min-height:80px;resize:vertical}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.drop-zone{border:2px dashed var(--border2);border-radius:var(--r2);padding:2rem 1rem;text-align:center;cursor:pointer;color:var(--text3);transition:all .2s}
+.drop-zone:hover,.drop-zone.over{border-color:var(--accent);background:rgba(232,99,10,.06);color:var(--text2)}
+.drop-zone i{font-size:2rem;display:block;margin-bottom:.6rem;color:var(--accent)}
+.drop-zone small{font-size:11px;color:var(--text3);display:block;margin-top:.3rem}
+.file-chosen-name{font-size:12px;color:var(--accent2);font-family:var(--font-mono);padding:8px 12px;background:rgba(232,99,10,.08);border:1px solid rgba(232,99,10,.2);border-radius:var(--r);display:none}
+.modal-actions{display:flex;justify-content:flex-end;gap:.75rem;margin-top:.5rem}
+.error-msg{font-size:12px;color:#ef4444;text-align:center;padding:8px;background:rgba(239,68,68,.08);border-radius:var(--r);border:1px solid rgba(239,68,68,.2);display:none}
+.progress-wrap{display:none}
+.progress-track{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;width:0%;transition:width .3s}
+.hint-text{font-size:11px;color:var(--text3);text-align:center;line-height:1.6}
+.hint-text strong{color:var(--accent2)}
+.pw-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;background:rgba(232,99,10,.08);border:1px solid rgba(232,99,10,.2);padding:4px 10px;border-radius:999px;color:var(--accent2);font-family:var(--font-mono)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .hero-title{font-size:2.2rem}
+  .filters-bar{flex-direction:column}
+  .filter-search{min-width:unset;width:100%}
+  nav{padding:.8rem 1rem}
+  .wrap{padding:0 1rem}
+}
+</style>
+</head>
+<body>
+
+<div id="doodleBg">
+<svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .dk { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      @keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+      @keyframes floatX { 0%,100%{transform:translateX(0)} 50%{transform:translateX(10px)} }
+      @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+      @keyframes pulse { 0%,100%{opacity:.55} 50%{opacity:.85} }
+      .float1{animation:floatY 6s ease-in-out infinite}
+      .float2{animation:floatY 8s ease-in-out infinite 1.5s}
+      .float3{animation:floatX 7s ease-in-out infinite 0.8s}
+      .float4{animation:floatY 9s ease-in-out infinite 3s}
+      .float5{animation:floatX 5s ease-in-out infinite 2s}
+      .float6{animation:floatY 10s ease-in-out infinite 0.3s}
+      .pulse1{animation:pulse 4s ease-in-out infinite}
+      .pulse2{animation:pulse 5s ease-in-out infinite 1s}
+    </style>
+  </defs>
+
+  <!-- ═══ BENZENE RING top-left ═══ -->
+  <g class="float1" style="transform-origin:130px 120px" opacity=".7">
+    <polygon points="130,72 172,96 172,144 130,168 88,144 88,96" class="dk" stroke="#e8630a" stroke-width="2.5"/>
+    <line x1="130" y1="72" x2="130" y2="50" stroke="#e8630a" stroke-width="2" opacity=".6"/>
+    <line x1="172" y1="96" x2="191" y2="85" stroke="#e8630a" stroke-width="2" opacity=".6"/>
+    <line x1="172" y1="144" x2="191" y2="155" stroke="#e8630a" stroke-width="2" opacity=".6"/>
+    <line x1="130" y1="168" x2="130" y2="190" stroke="#e8630a" stroke-width="2" opacity=".6"/>
+    <line x1="88" y1="144" x2="69" y2="155" stroke="#e8630a" stroke-width="2" opacity=".6"/>
+    <line x1="88" y1="96" x2="69" y2="85" stroke="#e8630a" stroke-width="2" opacity=".6"/>
+    <!-- inner double bonds -->
+    <polygon points="130,87 159,103 159,135 130,151 101,135 101,103" class="dk" stroke="#f59340" stroke-width="1.2" opacity=".5"/>
+    <text x="122" y="125" font-family="Georgia,serif" font-size="14" fill="#f59340" opacity=".8">⬡</text>
+  </g>
+
+  <!-- ═══ ERLENMEYER FLASK top-right ═══ -->
+  <g class="float2" style="transform-origin:1300px 90px" opacity=".72">
+    <path d="M1270,40 L1270,80 L1230,150 L1340,150 L1300,80 L1300,40 Z" class="dk" stroke="#3b82f6" stroke-width="2.5"/>
+    <line x1="1260" y1="40" x2="1310" y2="40" stroke="#3b82f6" stroke-width="3"/>
+    <!-- liquid bubbles -->
+    <ellipse cx="1255" cy="138" rx="7" ry="5" fill="#3b82f6" opacity=".35"/>
+    <ellipse cx="1310" cy="130" rx="5" ry="4" fill="#60a5fa" opacity=".3"/>
+    <circle cx="1270" cy="118" r="4" fill="#3b82f6" opacity=".25"/>
+    <!-- steam lines -->
+    <path d="M1275,30 Q1272,20 1278,10" class="dk" stroke="#60a5fa" stroke-width="1.5" opacity=".5"/>
+    <path d="M1285,28 Q1282,18 1288,8" class="dk" stroke="#60a5fa" stroke-width="1.5" opacity=".5"/>
+    <path d="M1295,30 Q1292,20 1298,10" class="dk" stroke="#60a5fa" stroke-width="1.5" opacity=".5"/>
+    <!-- label -->
+    <text x="1253" y="105" font-family="monospace" font-size="11" fill="#60a5fa" opacity=".7">H₂O</text>
+  </g>
+
+  <!-- ═══ MOLECULE CHAIN center-top ═══ -->
+  <g class="float3" style="transform-origin:720px 60px" opacity=".65">
+    <circle cx="680" cy="60" r="14" fill="#22c55e" opacity=".2" stroke="#22c55e" stroke-width="2"/>
+    <line x1="694" y1="60" x2="720" y2="60" stroke="#22c55e" stroke-width="2.5"/>
+    <circle cx="734" cy="60" r="14" fill="#22c55e" opacity=".2" stroke="#22c55e" stroke-width="2"/>
+    <line x1="748" y1="60" x2="760" y2="60" stroke="#22c55e" stroke-width="2.5"/>
+    <circle cx="774" cy="60" r="14" fill="#22c55e" opacity=".2" stroke="#22c55e" stroke-width="2"/>
+    <text x="672" y="64" font-family="monospace" font-size="11" fill="#4ade80" opacity=".9" text-anchor="middle">C</text>
+    <text x="734" y="64" font-family="monospace" font-size="11" fill="#4ade80" opacity=".9" text-anchor="middle">H</text>
+    <text x="774" y="64" font-family="monospace" font-size="11" fill="#4ade80" opacity=".9" text-anchor="middle">O</text>
+    <!-- bond lines going up/down -->
+    <line x1="680" y1="46" x2="680" y2="30" stroke="#22c55e" stroke-width="2" opacity=".5"/>
+    <text x="675" y="25" font-family="monospace" font-size="10" fill="#4ade80" opacity=".7">H</text>
+    <line x1="774" y1="46" x2="774" y2="30" stroke="#22c55e" stroke-width="2" opacity=".5"/>
+    <text x="769" y="25" font-family="monospace" font-size="10" fill="#4ade80" opacity=".7">H</text>
+  </g>
+
+  <!-- ═══ BEAKER bottom-left ═══ -->
+  <g class="float4" style="transform-origin:100px 780px" opacity=".68">
+    <path d="M60,700 L60,820 Q60,840 80,840 L180,840 Q200,840 200,820 L200,700 Z" class="dk" stroke="#a855f7" stroke-width="2.5"/>
+    <line x1="52" y1="700" x2="208" y2="700" stroke="#a855f7" stroke-width="3"/>
+    <!-- spout -->
+    <path d="M195,720 Q220,715 225,705" class="dk" stroke="#a855f7" stroke-width="2" opacity=".6"/>
+    <!-- liquid level -->
+    <path d="M62,780 Q130,770 198,780" class="dk" stroke="#c084fc" stroke-width="1.5" opacity=".5" stroke-dasharray="6,3"/>
+    <!-- bubbles in liquid -->
+    <circle cx="100" cy="810" r="5" fill="#a855f7" opacity=".25"/>
+    <circle cx="150" cy="800" r="7" fill="#a855f7" opacity=".2"/>
+    <circle cx="170" cy="820" r="4" fill="#c084fc" opacity=".3"/>
+    <!-- measuring marks -->
+    <line x1="63" y1="750" x2="75" y2="750" stroke="#c084fc" stroke-width="1.5" opacity=".6"/>
+    <line x1="63" y1="780" x2="80" y2="780" stroke="#c084fc" stroke-width="1.5" opacity=".6"/>
+    <text x="82" y="754" font-family="monospace" font-size="9" fill="#c084fc" opacity=".6">250</text>
+    <text x="82" y="784" font-family="monospace" font-size="9" fill="#c084fc" opacity=".6">500</text>
+  </g>
+
+  <!-- ═══ CHEMICAL FORMULA scatter ═══ -->
+  <text x="400" y="55" font-family="monospace" font-size="18" fill="#e8630a" opacity=".45" class="pulse1">CH₄ + 2O₂ → CO₂ + 2H₂O</text>
+  <text x="900" y="820" font-family="monospace" font-size="16" fill="#3b82f6" opacity=".4" class="pulse2">ΔG = ΔH - TΔS</text>
+  <text x="55" y="430" font-family="monospace" font-size="14" fill="#22c55e" opacity=".4" transform="rotate(-90,55,430)">PV = nRT</text>
+  <text x="1380" y="500" font-family="monospace" font-size="13" fill="#a855f7" opacity=".4" transform="rotate(90,1380,500)">Q = mcΔT</text>
+  <text x="600" y="880" font-family="monospace" font-size="15" fill="#f59340" opacity=".38">NaOH + HCl → NaCl + H₂O</text>
+  <text x="1050" y="200" font-family="monospace" font-size="13" fill="#22c55e" opacity=".38">η = W_out / W_in</text>
+
+  <!-- ═══ TEST TUBE right side ═══ -->
+  <g class="float5" style="transform-origin:1380px 450px" opacity=".7">
+    <path d="M1360,360 L1360,480 Q1360,500 1380,500 Q1400,500 1400,480 L1400,360 Z" class="dk" stroke="#0f9e8a" stroke-width="2.5"/>
+    <line x1="1352" y1="360" x2="1408" y2="360" stroke="#0f9e8a" stroke-width="3"/>
+    <!-- coloured liquid -->
+    <path d="M1362,440 Q1380,435 1398,440 L1398,480 Q1398,498 1380,498 Q1362,498 1362,480 Z" fill="#0f9e8a" opacity=".25"/>
+    <!-- bubbles -->
+    <circle cx="1375" cy="470" r="4" fill="#2dd4bf" opacity=".4"/>
+    <circle cx="1388" cy="460" r="3" fill="#2dd4bf" opacity=".35"/>
+  </g>
+
+  <!-- ═══ DISTILLATION COLUMN left-mid ═══ -->
+  <g class="float6" style="transform-origin:50px 500px" opacity=".6">
+    <rect x="20" y="380" width="50" height="260" rx="5" class="dk" stroke="#f59340" stroke-width="2"/>
+    <!-- trays -->
+    <line x1="20" y1="420" x2="70" y2="420" stroke="#f59340" stroke-width="1.5" opacity=".6"/>
+    <line x1="20" y1="460" x2="70" y2="460" stroke="#f59340" stroke-width="1.5" opacity=".6"/>
+    <line x1="20" y1="500" x2="70" y2="500" stroke="#f59340" stroke-width="1.5" opacity=".6"/>
+    <line x1="20" y1="540" x2="70" y2="540" stroke="#f59340" stroke-width="1.5" opacity=".6"/>
+    <line x1="20" y1="580" x2="70" y2="580" stroke="#f59340" stroke-width="1.5" opacity=".6"/>
+    <!-- inlet/outlet arrows -->
+    <path d="M-10,400 L20,400" class="dk" stroke="#fbbf6a" stroke-width="2" marker-end="url(#arrowOrange)"/>
+    <path d="M70,560 L100,560" class="dk" stroke="#fbbf6a" stroke-width="2" marker-end="url(#arrowOrange)"/>
+    <text x="25" y="375" font-family="monospace" font-size="10" fill="#fbbf6a" opacity=".7">Distill.</text>
+  </g>
+
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrowOrange" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#fbbf6a" opacity=".7"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#60a5fa" opacity=".7"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#4ade80" opacity=".7"/>
+    </marker>
+  </defs>
+
+  <!-- ═══ REACTION ARROW + equation center ═══ -->
+  <g class="pulse1" opacity=".5">
+    <path d="M500,480 L620,480" class="dk" stroke="#e8630a" stroke-width="2.5" marker-end="url(#arrowOrange)"/>
+    <path d="M640,480 L520,480" class="dk" stroke="#f59340" stroke-width="1.5" marker-end="url(#arrowOrange)" opacity=".5"/>
+    <text x="555" y="470" font-family="monospace" font-size="10" fill="#fbbf6a" opacity=".8">Keq</text>
+  </g>
+
+  <!-- ═══ HEAT EXCHANGER doodle mid-right ═══ -->
+  <g class="float2" style="transform-origin:1100px 450px" opacity=".6">
+    <rect x="1020" y="410" width="160" height="80" rx="8" class="dk" stroke="#3b82f6" stroke-width="2"/>
+    <!-- tubes inside -->
+    <line x1="1020" y1="440" x2="1180" y2="440" stroke="#60a5fa" stroke-width="1.5" opacity=".5"/>
+    <line x1="1020" y1="455" x2="1180" y2="455" stroke="#60a5fa" stroke-width="1.5" opacity=".5"/>
+    <line x1="1020" y1="470" x2="1180" y2="470" stroke="#60a5fa" stroke-width="1.5" opacity=".5"/>
+    <!-- arrows in/out -->
+    <path d="M990,425 L1020,425" class="dk" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+    <path d="M1180,425 L1210,425" class="dk" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+    <path d="M1210,475 L1180,475" class="dk" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+    <path d="M1020,475 L990,475" class="dk" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+    <text x="1075" y="408" font-family="monospace" font-size="10" fill="#60a5fa" opacity=".7">H.Exchanger</text>
+    <text x="975" y="422" font-family="monospace" font-size="9" fill="#ef4444" opacity=".6">Hot</text>
+    <text x="1215" y="422" font-family="monospace" font-size="9" fill="#3b82f6" opacity=".6">Cold</text>
+  </g>
+
+  <!-- ═══ ATOMIC ORBITAL circles ═══ -->
+  <g class="float3" style="transform-origin:1200px 680px" opacity=".55">
+    <circle cx="1200" cy="680" r="8" fill="#e8630a" opacity=".6"/>
+    <ellipse cx="1200" cy="680" rx="55" ry="22" class="dk" stroke="#f59340" stroke-width="1.8" transform="rotate(0,1200,680)"/>
+    <ellipse cx="1200" cy="680" rx="55" ry="22" class="dk" stroke="#fbbf6a" stroke-width="1.8" transform="rotate(60,1200,680)"/>
+    <ellipse cx="1200" cy="680" rx="55" ry="22" class="dk" stroke="#e8630a" stroke-width="1.8" transform="rotate(120,1200,680)"/>
+    <text x="1185" y="745" font-family="monospace" font-size="11" fill="#fbbf6a" opacity=".7">Orbital</text>
+  </g>
+
+  <!-- ═══ pH scale doodle ═══ -->
+  <g class="pulse2" opacity=".5" style="transform-origin:720px 850px">
+    <rect x="580" y="840" width="280" height="22" rx="11" fill="url(#phGrad)" opacity=".5"/>
+    <defs>
+      <linearGradient id="phGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#ef4444"/>
+        <stop offset="50%" stop-color="#22c55e"/>
+        <stop offset="100%" stop-color="#3b82f6"/>
+      </linearGradient>
+    </defs>
+    <text x="580" y="835" font-family="monospace" font-size="9" fill="#ef4444" opacity=".8">pH 0</text>
+    <text x="706" y="835" font-family="monospace" font-size="9" fill="#22c55e" opacity=".8">pH 7</text>
+    <text x="845" y="835" font-family="monospace" font-size="9" fill="#3b82f6" opacity=".8">pH 14</text>
+    <text x="590" y="878" font-family="monospace" font-size="10" fill="#f59340" opacity=".6">Acidic</text>
+    <text x="700" y="878" font-family="monospace" font-size="10" fill="#22c55e" opacity=".6">Neutral</text>
+    <text x="800" y="878" font-family="monospace" font-size="10" fill="#60a5fa" opacity=".6">Basic</text>
+  </g>
+
+  <!-- ═══ Small scattered atoms/dots for texture ═══ -->
+  <circle cx="350" cy="200" r="3" fill="#e8630a" opacity=".4"/>
+  <circle cx="780" cy="750" r="3" fill="#22c55e" opacity=".4"/>
+  <circle cx="950" cy="130" r="4" fill="#3b82f6" opacity=".35"/>
+  <circle cx="450" cy="650" r="3" fill="#a855f7" opacity=".35"/>
+  <circle cx="1100" cy="300" r="3" fill="#f59340" opacity=".4"/>
+  <circle cx="250" cy="600" r="4" fill="#0f9e8a" opacity=".35"/>
+  <circle cx="1300" cy="750" r="3" fill="#22c55e" opacity=".4"/>
+
+  <!-- ═══ Doodle lines / squiggles ═══ -->
+  <path d="M300,300 Q350,270 400,300 Q450,330 500,300" class="dk" stroke="#e8630a" stroke-width="1.5" opacity=".2" stroke-dasharray="5,5"/>
+  <path d="M800,700 Q850,670 900,700 Q950,730 1000,700" class="dk" stroke="#3b82f6" stroke-width="1.5" opacity=".2" stroke-dasharray="5,5"/>
+
+  <!-- ═══ Periodic-table snippet ═══ -->
+  <g class="float4" style="transform-origin:1350px 200px" opacity=".55">
+    <rect x="1310" y="160" width="40" height="40" rx="4" class="dk" stroke="#22c55e" stroke-width="1.8"/>
+    <text x="1325" y="178" font-family="monospace" font-size="9" fill="#4ade80" opacity=".8">6</text>
+    <text x="1320" y="193" font-family="monospace" font-size="14" font-weight="bold" fill="#4ade80" opacity=".9">C</text>
+    <rect x="1355" y="160" width="40" height="40" rx="4" class="dk" stroke="#3b82f6" stroke-width="1.8"/>
+    <text x="1368" y="178" font-family="monospace" font-size="9" fill="#60a5fa" opacity=".8">7</text>
+    <text x="1365" y="193" font-family="monospace" font-size="14" font-weight="bold" fill="#60a5fa" opacity=".9">N</text>
+    <rect x="1310" y="205" width="40" height="40" rx="4" class="dk" stroke="#a855f7" stroke-width="1.8"/>
+    <text x="1322" y="223" font-family="monospace" font-size="9" fill="#c084fc" opacity=".8">8</text>
+    <text x="1318" y="238" font-family="monospace" font-size="14" font-weight="bold" fill="#c084fc" opacity=".9">O</text>
+    <rect x="1355" y="205" width="40" height="40" rx="4" class="dk" stroke="#f59340" stroke-width="1.8"/>
+    <text x="1367" y="223" font-family="monospace" font-size="9" fill="#fbbf6a" opacity=".8">1</text>
+    <text x="1363" y="238" font-family="monospace" font-size="14" font-weight="bold" fill="#fbbf6a" opacity=".9">H</text>
+  </g>
+
+  <!-- ═══ Flow arrows process diagram bottom ═══ -->
+  <g opacity=".38">
+    <rect x="200" y="860" width="80" height="35" rx="6" class="dk" stroke="#0f9e8a" stroke-width="1.8"/>
+    <text x="218" y="882" font-family="monospace" font-size="10" fill="#2dd4bf">Reactor</text>
+    <path d="M280,877 L320,877" class="dk" stroke="#2dd4bf" stroke-width="2" marker-end="url(#arrowGreen)"/>
+    <rect x="320" y="860" width="80" height="35" rx="6" class="dk" stroke="#0f9e8a" stroke-width="1.8"/>
+    <text x="337" y="882" font-family="monospace" font-size="10" fill="#2dd4bf">Separator</text>
+    <path d="M400,877 L440,877" class="dk" stroke="#2dd4bf" stroke-width="2" marker-end="url(#arrowGreen)"/>
+    <rect x="440" y="860" width="70" height="35" rx="6" class="dk" stroke="#0f9e8a" stroke-width="1.8"/>
+    <text x="455" y="882" font-family="monospace" font-size="10" fill="#2dd4bf">Product</text>
+  </g>
+
+  <!-- ═══ Wave/sine curve (fluid dynamics) ═══ -->
+  <path d="M0,350 Q90,310 180,350 Q270,390 360,350 Q450,310 540,350 Q630,390 720,350 Q810,310 900,350 Q990,390 1080,350 Q1170,310 1260,350 Q1350,390 1440,350"
+    class="dk" stroke="#3b82f6" stroke-width="1.5" opacity=".12" stroke-dasharray="8,4"/>
+
+</svg>
+</div>
+<canvas id="bgCanvas"></canvas>
+<div class="deco-line l1"></div>
+<div class="deco-line l2"></div>
+<div class="deco-line l3"></div>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="nav-logo-main">Notes by <span>Dnyaneshwari</span></div>
+      <div class="nav-logo-sub">DY Patil International University &bull; Chem. Engg.</div>
+    </div>
+    <div class="nav-right">
+      <div class="badge-admin" id="adminBadge"><i class="ti ti-shield-check"></i>Admin</div>
+      <button class="btn btn-upload btn-accent" id="uploadBtn" onclick="openUpload()"><i class="ti ti-upload"></i>Upload</button>
+      <button class="btn" id="adminBtn" onclick="toggleAdmin()"><i class="ti ti-lock"></i><span id="adminLabel">Admin</span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-kicker"><i class="ti ti-flask"></i>Chemical Engineering &bull; DY Patil International University</div>
+    <h1 class="hero-title">Notes by<br><em>Dnyaneshwari Randive</em></h1>
+    <div class="dept-badge"><i class="ti ti-atom"></i>Department of Chemical Engineering — DY Patil International University, Pune</div>
+    <!-- SEARCH BAR prominently placed -->
+    <div class="hero-search" style="max-width:520px;margin:0 auto 1.4rem;position:relative;animation:fadeDown .6s ease .22s both">
+      <i class="ti ti-search" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--accent2);font-size:18px;pointer-events:none"></i>
+      <input type="text" id="heroSearch" placeholder="Search notes, question papers, subjects…" oninput="document.getElementById('searchInput').value=this.value;render()"
+        style="width:100%;background:rgba(26,31,46,.9);border:2px solid rgba(232,99,10,.4);color:var(--text);font-family:var(--font-body);font-size:15px;padding:14px 20px 14px 46px;border-radius:999px;outline:none;transition:border-color .2s;backdrop-filter:blur(10px)">
+    </div>
+    <p class="hero-sub">Your one-stop portal for question papers, question banks, lab manuals and study notes — all in one place, free for every student.</p>
+    <!-- Contact & LinkedIn -->
+    <div class="contact-bar">
+      <a href="https://www.linkedin.com/in/dnyaneshwari-randive-95b97b37b" target="_blank" rel="noopener" class="contact-pill linkedin">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        Connect on LinkedIn
+      </a>
+      <a href="tel:+919665452482" class="contact-pill">
+        <i class="ti ti-phone" style="color:var(--teal)"></i>+91 96654 52482
+      </a>
+      <a href="https://wa.me/919665452482" target="_blank" rel="noopener" class="contact-pill">
+        <i class="ti ti-brand-whatsapp" style="color:#25d366"></i>WhatsApp
+      </a>
+    </div>
+    <div style="height:.8rem"></div>
+    <div class="hero-chips">
+      <span class="chip"><i class="ti ti-file-description"></i>Question Papers</span>
+      <span class="chip"><i class="ti ti-notebook"></i>Question Banks</span>
+      <span class="chip"><i class="ti ti-flask-2"></i>Lab Manuals</span>
+      <span class="chip"><i class="ti ti-notes"></i>Study Notes</span>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-card" style="animation-delay:.05s">
+        <div class="stat-icon"><i class="ti ti-files"></i></div>
+        <div class="stat-num" id="sTot">0</div>
+        <div class="stat-label">Total Files</div>
+      </div>
+      <div class="stat-card" style="animation-delay:.1s">
+        <div class="stat-icon"><i class="ti ti-file-description"></i></div>
+        <div class="stat-num" id="sQP">0</div>
+        <div class="stat-label">Question Papers</div>
+      </div>
+      <div class="stat-card" style="animation-delay:.15s">
+        <div class="stat-icon"><i class="ti ti-list-check"></i></div>
+        <div class="stat-num" id="sQB">0</div>
+        <div class="stat-label">Question Banks</div>
+      </div>
+      <div class="stat-card" style="animation-delay:.2s">
+        <div class="stat-icon"><i class="ti ti-notes"></i></div>
+        <div class="stat-num" id="sNotes">0</div>
+        <div class="stat-label">Notes & Manuals</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILES SECTION -->
+  <section>
+    <div class="section-hd">
+      <div class="section-title">Study Resources</div>
+      <div class="section-count" id="countBadge">0 files</div>
+    </div>
+
+    <div class="filters-bar">
+      <div class="filter-search">
+        <i class="ti ti-search"></i>
+        <input type="text" id="searchInput" placeholder="Search by title, subject…" oninput="document.getElementById('heroSearch').value=this.value;render()">
+      </div>
+      <div class="filter-select">
+        <select id="catFilter" onchange="render()">
+          <option value="">All categories</option>
+          <option value="Question Paper">Question Paper</option>
+          <option value="Question Bank">Question Bank</option>
+          <option value="Notes">Notes</option>
+          <option value="Lab Manual">Lab Manual</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="filter-select">
+        <select id="semFilter" onchange="render()">
+          <option value="">All semesters</option>
+          <option>Sem 1</option><option>Sem 2</option><option>Sem 3</option><option>Sem 4</option>
+          <option>Sem 5</option><option>Sem 6</option><option>Sem 7</option><option>Sem 8</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="files-grid" id="filesGrid"></div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <p>Made with ♥ by <strong>Dnyaneshwari Randive</strong> &bull; Chemical Engineering &bull; DY Patil International University</p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:.9rem">
+      <a href="https://www.linkedin.com/in/dnyaneshwari-randive-95b97b37b" target="_blank" rel="noopener" class="btn-linkedin">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+      <a href="tel:+919665452482" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#2dd4bf'" onmouseout="this.style.color='var(--text3)'">
+        <i class="ti ti-phone" style="font-size:15px;color:var(--teal)"></i>+91 96654 52482
+      </a>
+    </div>
+    <p style="margin-top:.6rem;font-size:11px">Sharing knowledge, one file at a time.</p>
+  </div>
+</footer>
+
+<!-- LOGIN MODAL -->
+<div class="overlay" id="loginOverlay">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-hd">
+      <div class="modal-title">Admin Login</div>
+      <button class="modal-close" onclick="closeModal('loginOverlay')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="pwInput" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="error-msg" id="loginErr">Incorrect password. Please try again.</div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('loginOverlay')">Cancel</button>
+      <button class="btn btn-accent" onclick="doLogin()"><i class="ti ti-login"></i>Login</button>
+    </div>
+    <div class="hint-text">Default password: <span class="pw-badge">admin123</span><br>Change it from Admin menu after login.</div>
+  </div>
+</div>
+
+<!-- UPLOAD MODAL -->
+<div class="overlay" id="uploadOverlay">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-title">Upload Resource</div>
+      <button class="modal-close" onclick="closeModal('uploadOverlay')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileIn').click()" ondragover="dzOver(event)" ondragleave="dzLeave()" ondrop="dzDrop(event)">
+      <i class="ti ti-cloud-upload"></i>
+      Click to choose file or drag &amp; drop<br>
+      <small>PDF, PPT, PPTX, DOC, DOCX, ZIP, Images (max ~5MB)</small>
+    </div>
+    <input type="file" id="fileIn" style="display:none" accept=".pdf,.ppt,.pptx,.doc,.docx,.zip,.jpg,.jpeg,.png" onchange="onFileChosen(this)">
+    <div class="file-chosen-name" id="fileChosenName"></div>
+    <div class="field"><label>Title</label><input type="text" id="uTitle" placeholder="e.g. Mass Transfer Mid-Sem 2024"></div>
+    <div class="field-row">
+      <div class="field"><label>Subject</label><input type="text" id="uSubject" placeholder="e.g. Thermodynamics"></div>
+      <div class="field"><label>Semester</label>
+        <select id="uSem">
+          <option value="">— pick —</option>
+          <option>Sem 1</option><option>Sem 2</option><option>Sem 3</option><option>Sem 4</option>
+          <option>Sem 5</option><option>Sem 6</option><option>Sem 7</option><option>Sem 8</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>Category</label>
+      <select id="uCat">
+        <option value="">— pick —</option>
+        <option>Question Paper</option>
+        <option>Question Bank</option>
+        <option>Notes</option>
+        <option>Lab Manual</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="field"><label>Description (optional)</label><textarea id="uDesc" placeholder="e.g. 2024 end-sem, covers Unit 3 & 4…"></textarea></div>
+    <div class="progress-wrap" id="progWrap"><div class="progress-track"><div class="progress-fill" id="progFill"></div></div></div>
+    <div class="error-msg" id="uploadErr"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('uploadOverlay')">Cancel</button>
+      <button class="btn btn-accent" onclick="doUpload()"><i class="ti ti-cloud-upload"></i>Upload File</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE PASSWORD MODAL -->
+<div class="overlay" id="pwOverlay">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-hd">
+      <div class="modal-title">Change Password</div>
+      <button class="modal-close" onclick="closeModal('pwOverlay')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="field"><label>New Password</label><input type="password" id="newPw" placeholder="Min 4 characters"></div>
+    <div class="field"><label>Confirm Password</label><input type="password" id="newPw2" placeholder="Re-enter password"></div>
+    <div class="error-msg" id="pwErr"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('pwOverlay')">Cancel</button>
+      <button class="btn btn-accent" onclick="doChangePw()"><i class="ti ti-key"></i>Save Password</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CANVAS PARTICLES ──
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+resize(); window.addEventListener('resize', resize);
+
+class Particle {
+  constructor(){
+    this.x = Math.random()*W; this.y = Math.random()*H;
+    this.r = Math.random()*1.5+.3;
+    this.vx = (Math.random()-.5)*.3; this.vy = (Math.random()-.5)*.3;
+    this.a = Math.random()*.6+.1;
+    const colors=['232,99,10','59,130,246','34,197,94','168,85,247','15,158,138','245,147,64'];
+    this.color=colors[Math.floor(Math.random()*colors.length)];
+  }
+  update(){ this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>W)this.vx*=-1; if(this.y<0||this.y>H)this.vy*=-1; }
+  draw(){
+    ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${this.color},${this.a})`; ctx.fill();
+  }
+}
+
+for(let i=0;i<90;i++) particles.push(new Particle());
+
+function drawConnections(){
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<110){
+        ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle=`rgba(${particles[i].color},${.1*(1-d/110)})`; ctx.lineWidth=.5; ctx.stroke();
+      }
+    }
+  }
+}
+
+function animBg(){
+  ctx.clearRect(0,0,W,H);
+  particles.forEach(p=>{p.update();p.draw()});
+  drawConnections();
+  requestAnimationFrame(animBg);
+}
+animBg();
+
+// ── APP STATE ──
+const STORE='nbdyn2_files', PW_STORE='nbdyn2_pw';
+let isAdmin=false, chosenFile=null, resources=[];
+
+function loadRes(){ try{ resources=JSON.parse(localStorage.getItem(STORE)||'[]'); }catch(e){ resources=[]; } }
+function saveRes(){ localStorage.setItem(STORE,JSON.stringify(resources)); }
+function getPw(){ return localStorage.getItem(PW_STORE)||'admin123'; }
+function fileExt(n){ return (n||'').split('.').pop().toLowerCase(); }
+function fileType(n){ const e=fileExt(n); return e==='pdf'?'pdf':['ppt','pptx'].includes(e)?'ppt':['doc','docx'].includes(e)?'doc':'other'; }
+function fileIconCls(t){ return t==='pdf'?'ti-file-type-pdf':t==='ppt'?'ti-presentation':t==='doc'?'ti-file-word':'ti-file'; }
+function tagCls(c){ return c==='Question Paper'?'tag-qp':c==='Question Bank'?'tag-qb':c==='Notes'?'tag-notes':c==='Lab Manual'?'tag-lab':c==='Reference Book'?'tag-ref':'tag-other'; }
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtDate(){ return new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}); }
+
+function render(){
+  loadRes();
+  const q=(document.getElementById('searchInput').value||'').toLowerCase();
+  const cat=document.getElementById('catFilter').value;
+  const sem=document.getElementById('semFilter').value;
+  const list=resources.filter(r=>
+    (!q||r.title.toLowerCase().includes(q)||(r.subject||'').toLowerCase().includes(q)||(r.desc||'').toLowerCase().includes(q))
+    &&(!cat||r.category===cat)&&(!sem||r.sem===sem)
+  );
+  document.getElementById('sTot').textContent=resources.length;
+  document.getElementById('sQP').textContent=resources.filter(r=>r.category==='Question Paper').length;
+  document.getElementById('sQB').textContent=resources.filter(r=>r.category==='Question Bank').length;
+  document.getElementById('sNotes').textContent=resources.filter(r=>r.category==='Notes'||r.category==='Lab Manual').length;
+  document.getElementById('countBadge').textContent=(cat||sem)?`${list.length} filtered`:`${list.length} files`;
+  const grid=document.getElementById('filesGrid');
+  if(!list.length){
+    grid.innerHTML=`<div class="empty-state"><i class="ti ti-mood-empty"></i><p>${resources.length?'No files match your filters. Try clearing them.':'No files uploaded yet — check back soon!'}</p></div>`;
+    return;
+  }
+  grid.innerHTML=list.map((r,i)=>{
+    const ft=fileType(r.filename||'');
+    return `<div class="file-card" style="animation-delay:${i*.04}s">
+      <div class="file-card-top">
+        <div class="file-icon-wrap ${ft}"><i class="ti ${fileIconCls(ft)}"></i></div>
+        <div class="file-info">
+          <div class="file-name">${esc(r.title)}</div>
+          <div class="file-subject">${r.subject?esc(r.subject):''}${r.sem?' &middot; '+esc(r.sem):''}</div>
+        </div>
+      </div>
+      <div class="file-tags">
+        ${r.category?`<span class="tag ${tagCls(r.category)}">${esc(r.category)}</span>`:''}
+      </div>
+      ${r.desc?`<div style="font-size:12px;color:var(--text3);line-height:1.5">${esc(r.desc)}</div>`:''}
+      <div class="file-meta">${esc(r.date)} &bull; ${esc(r.filename||'')}</div>
+      <div class="file-actions">
+        <button class="dl-btn" onclick="dlFile('${r.id}')"><i class="ti ti-download"></i>Download</button>
+        ${isAdmin?`<button class="del-btn" onclick="delFile('${r.id}')" title="Delete"><i class="ti ti-trash"></i></button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function dlFile(id){
+  const r=resources.find(x=>x.id===id);
+  if(!r||!r.data) return;
+  const a=document.createElement('a'); a.href=r.data; a.download=r.filename||r.title; a.click();
+}
+
+function delFile(id){
+  if(!confirm('Delete this file permanently?')) return;
+  resources=resources.filter(x=>x.id!==id); saveRes(); render();
+}
+
+// ── ADMIN ──
+function toggleAdmin(){
+  if(isAdmin){
+    const existing=document.getElementById('adminMenu');
+    if(existing){ existing.remove(); return; }
+    const menu=document.createElement('div');
+    menu.id='adminMenu';
+    menu.style.cssText='position:fixed;right:2rem;top:70px;background:#1a1f2e;border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:6px;z-index:300;min-width:180px;box-shadow:0 8px 32px rgba(0,0,0,.5)';
+    menu.innerHTML=`
+      <button onclick="openChangePw();document.getElementById('adminMenu').remove()" style="width:100%;text-align:left;padding:10px 14px;border:none;background:none;cursor:pointer;font-size:13px;color:#f0ede8;border-radius:8px;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:8px"><i class="ti ti-key" style="color:#f59340"></i>Change password</button>
+      <button onclick="doLogout();document.getElementById('adminMenu').remove()" style="width:100%;text-align:left;padding:10px 14px;border:none;background:none;cursor:pointer;font-size:13px;color:#ef4444;border-radius:8px;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:8px"><i class="ti ti-logout"></i>Logout</button>`;
+    document.body.appendChild(menu);
+    setTimeout(()=>document.addEventListener('click',function h(e){ if(!menu.contains(e.target)&&e.target!==document.getElementById('adminBtn')){ menu.remove(); document.removeEventListener('click',h); }},true),10);
+  } else {
+    openModal('loginOverlay');
+    setTimeout(()=>document.getElementById('pwInput').focus(),80);
+  }
+}
+
+function doLogin(){
+  if(document.getElementById('pwInput').value===getPw()){
+    isAdmin=true;
+    document.getElementById('adminBadge').style.display='inline-flex';
+    document.getElementById('adminLabel').textContent='Admin ▾';
+    document.getElementById('uploadBtn').style.display='inline-flex';
+    document.getElementById('loginErr').style.display='none';
+    document.getElementById('pwInput').value='';
+    closeModal('loginOverlay'); render();
+  } else { document.getElementById('loginErr').style.display='block'; }
+}
+
+function doLogout(){
+  isAdmin=false;
+  document.getElementById('adminBadge').style.display='none';
+  document.getElementById('adminLabel').textContent='Admin';
+  document.getElementById('uploadBtn').style.display='none';
+  render();
+}
+
+function openChangePw(){ document.getElementById('pwErr').style.display='none'; openModal('pwOverlay'); }
+
+function doChangePw(){
+  const p1=document.getElementById('newPw').value.trim(), p2=document.getElementById('newPw2').value.trim();
+  const err=document.getElementById('pwErr');
+  if(!p1||p1.length<4){ err.textContent='Password must be at least 4 characters.'; err.style.display='block'; return; }
+  if(p1!==p2){ err.textContent='Passwords do not match.'; err.style.display='block'; return; }
+  localStorage.setItem(PW_STORE,p1);
+  document.getElementById('newPw').value=''; document.getElementById('newPw2').value='';
+  closeModal('pwOverlay'); alert('Password changed!');
+}
+
+// ── UPLOAD ──
+function openUpload(){ if(!isAdmin) return; document.getElementById('uploadErr').style.display='none'; openModal('uploadOverlay'); }
+function dzOver(e){ e.preventDefault(); document.getElementById('dropZone').classList.add('over'); }
+function dzLeave(){ document.getElementById('dropZone').classList.remove('over'); }
+function dzDrop(e){ e.preventDefault(); dzLeave(); if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); }
+function onFileChosen(inp){ if(inp.files[0]) setFile(inp.files[0]); }
+function setFile(f){
+  chosenFile=f;
+  const el=document.getElementById('fileChosenName');
+  el.style.display='block'; el.textContent=f.name+' — '+Math.round(f.size/1024)+' KB';
+  if(!document.getElementById('uTitle').value) document.getElementById('uTitle').value=f.name.replace(/\.[^.]+$/,'').replace(/[-_]/g,' ');
+}
+
+function doUpload(){
+  const title=document.getElementById('uTitle').value.trim();
+  const cat=document.getElementById('uCat').value;
+  const errEl=document.getElementById('uploadErr');
+  if(!chosenFile){ errEl.textContent='Please choose a file first.'; errEl.style.display='block'; return; }
+  if(!title){ errEl.textContent='Please enter a title.'; errEl.style.display='block'; return; }
+  if(!cat){ errEl.textContent='Please select a category.'; errEl.style.display='block'; return; }
+  errEl.style.display='none';
+  const pw=document.getElementById('progWrap'), pf=document.getElementById('progFill');
+  pw.style.display='block'; pf.style.width='0%';
+  const reader=new FileReader();
+  reader.onprogress=e=>{ if(e.lengthComputable) pf.style.width=Math.round(e.loaded/e.total*85)+'%'; };
+  reader.onload=e=>{
+    pf.style.width='100%';
+    const rec={
+      id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+      title, subject:document.getElementById('uSubject').value.trim(),
+      sem:document.getElementById('uSem').value, category:cat,
+      desc:document.getElementById('uDesc').value.trim(),
+      filename:chosenFile.name, date:fmtDate(), data:e.target.result
+    };
+    loadRes(); resources.unshift(rec);
+    try{ saveRes(); }
+    catch(ex){ errEl.textContent='File too large for browser storage. Please use a smaller file (under 5MB).'; errEl.style.display='block'; pw.style.display='none'; return; }
+    chosenFile=null;
+    ['fileIn','uTitle','uSubject','uDesc'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+    ['uSem','uCat'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('fileChosenName').style.display='none';
+    setTimeout(()=>{ pw.style.display='none'; closeModal('uploadOverlay'); render(); },500);
+  };
+  reader.onerror=()=>{ errEl.textContent='Failed to read file.'; errEl.style.display='block'; };
+  reader.readAsDataURL(chosenFile);
+}
+
+// ── MODALS ──
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.overlay').forEach(o=>{ o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); }); });
+
+loadRes(); render();
+</script>
+</body>
+</html>
